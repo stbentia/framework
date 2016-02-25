@@ -1,4 +1,4 @@
-﻿// Accord Neural Net Library
+// Accord Neural Net Library
 // The Accord.NET Framework
 // http://accord-framework.net
 //
@@ -446,7 +446,9 @@ namespace Accord.Neuro.Learning
                         }
                         else if (S < 0.0)
                         {
-                            neuronWeightUpdates[k] = Math.Max(neuronWeightUpdates[k] * etaMinus, deltaMin);
+                            var delta = Math.Max(neuronWeightUpdates[k] * etaMinus, deltaMin);
+                            neuron.Weights[k] -= neuronWeightUpdates[k]; // revert previous update
+                            neuronWeightUpdates[k] = delta;
                             neuronPreviousWeightDerivatives[k] = 0.0;
                         }
                         else
@@ -466,8 +468,10 @@ namespace Accord.Neuro.Learning
                     }
                     else if (S < 0.0)
                     {
-                        layerThresholdUpdates[j] = Math.Max(layerThresholdUpdates[j] * etaMinus, deltaMin);
-                        layerThresholdDerivatives[j] = 0.0;
+                        var delta = Math.Max(layerThresholdUpdates[j] * etaMinus, deltaMin);
+                        neuron.Threshold -= layerThresholdUpdates[j]; // revert previous update
+                        layerThresholdUpdates[j] = delta;
+                        layerPreviousThresholdDerivatives[j] = 0.0;
                     }
                     else
                     {
